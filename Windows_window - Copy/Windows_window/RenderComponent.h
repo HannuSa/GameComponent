@@ -10,5 +10,6 @@ public:
 	~RenderComponent();
 
 	std::vector<unsigned char> image;
+	unsigned width, height;
 };
 

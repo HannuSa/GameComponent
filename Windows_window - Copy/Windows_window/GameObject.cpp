@@ -1,6 +1,5 @@
 #include "GameObject.h"
 
-
 GameObject::GameObject()
 {}
 
@@ -9,29 +8,17 @@ GameObject::~GameObject()
 }
 
 
-bool GameObject::AddComponent(Component* _comp)
+void GameObject::AddComponent(Component* _component)
 {
-	for (unsigned int i = 0; i < components.size(); i++)
-	{
-		if (_comp->type == components[i]->type)
-		{
-			components[i] = _comp;
-			return false;
-		}
-	}
-	components.push_back(_comp);
-	return true;
+	_components.insert(std::make_pair(&typeid(*_component), _component));
 }
 
 
 void GameObject::RemoveComponent(Component* _comp)
 {
-	for (std::vector<Component*>::iterator it = components.begin();
-		it < components.end(); it++)
+	ComponentMap::iterator position =_components.find(&typeid(_comp));
+	if (position != _components.end())
 	{
-		if (_comp->type == (*it)->type)
-		{
-			components.erase(it);
-		}
+		_components.erase(position);
 	}
 }
