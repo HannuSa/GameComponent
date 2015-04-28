@@ -9,6 +9,6 @@ class PhysicsSystem :
 public:
 	PhysicsSystem();
 	~PhysicsSystem();
-	void Update(PhysicsComponent _component);
+	void Update(PhysicsComponent *_component);
 };
 

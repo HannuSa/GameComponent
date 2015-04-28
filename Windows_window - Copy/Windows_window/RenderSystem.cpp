@@ -157,38 +157,41 @@ void RenderSystem::Initialize()
 }
 
 
-void RenderSystem::Update(RenderComponent _comp)
+void RenderSystem::Update(RenderComponent* _comp)
 {
-	glClearColor(0, 1, 0, 0);
+	if (_comp != nullptr)
+	{
+		glClearColor(0, 1, 0, 0);
 
-	//Create texture
-	texture;
-	glGenTextures(1, &texture);
+		//Create texture
+		texture;
+		glGenTextures(1, &texture);
 
-	glBindTexture(GL_TEXTURE_2D, texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, 4, _comp.width, _comp.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, _comp.image.data());
-	GLenum glerr = glGetError();
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, 4, _comp->width, _comp->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, _comp->image.data());
+		GLenum glerr = glGetError();
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-	glActiveTexture(GL_TEXTURE0);
+		glActiveTexture(GL_TEXTURE0);
 
-	glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT);
 
-	//Draw
-	glUseProgram(programObject);
+		//Draw
+		glUseProgram(programObject);
 
-	//World rotation happens here
-	rotation += 1.0f;
-	worldTransform = glm::mat4(); glm::translate(glm::vec3(0.0f, 0.0f, -5.0f)) ;
-	glUniformMatrix4fv(worldIndex, 1, GL_FALSE, reinterpret_cast<float*>(&worldTransform));
+		//World rotation happens here
+		rotation += 1.0f;
+		worldTransform = glm::mat4(); glm::translate(glm::vec3(0.0f, 0.0f, -5.0f)) ;
+		glUniformMatrix4fv(worldIndex, 1, GL_FALSE, reinterpret_cast<float*>(&worldTransform));
 
-	glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
-	//attrib, amount of dimensional attributes, type of atttributes , normalized?, reference, pointer to data
-	glVertexAttribPointer(positionIndex, 2, GL_FLOAT, GL_FALSE, 0, reinterpret_cast<GLvoid*>(0));
-	glVertexAttribPointer(textureIndex, 2, GL_FLOAT, GL_FALSE, 0, reinterpret_cast<GLvoid*>(8));
+		glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
+		//attrib, amount of dimensional attributes, type of atttributes , normalized?, reference, pointer to data
+		glVertexAttribPointer(positionIndex, 2, GL_FLOAT, GL_FALSE, 0, reinterpret_cast<GLvoid*>(0));
+		glVertexAttribPointer(textureIndex, 2, GL_FLOAT, GL_FALSE, 0, reinterpret_cast<GLvoid*>(8));
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[1]);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-	glUseProgram(0u);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[1]);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glUseProgram(0u);
+	}
 }

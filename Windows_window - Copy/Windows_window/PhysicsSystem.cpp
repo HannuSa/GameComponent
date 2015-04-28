@@ -11,7 +11,10 @@ PhysicsSystem::~PhysicsSystem()
 }
 
 
-void PhysicsSystem::Update(PhysicsComponent _component)
+void PhysicsSystem::Update(PhysicsComponent *_component)
 {
-
+	if (_component != nullptr)
+	{
+		_component->Position.x += 1;
+	}
 }

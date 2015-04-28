@@ -13,7 +13,7 @@ public:
 	void Initialize();
 	void ErrorMessage(std::string error);
 	void CheckShaderErrors(GLuint shader);
-	void Update(RenderComponent _component);
+	void Update(RenderComponent* _component);
 
 private:
 	GLuint programObject;
