@@ -13,6 +13,7 @@ public:
 	~SystemManager();
 
 	void AddObject(GameObject* _object);
+	void InitGraphics();
 	void Update();
 
 private:

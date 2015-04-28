@@ -7,7 +7,6 @@ GameObject::~GameObject()
 {
 }
 
-
 void GameObject::AddComponent(Component* _component)
 {
 	_components.insert(std::make_pair(&typeid(*_component), _component));

@@ -10,7 +10,7 @@ class Component
 {
 public:
 	Component(Type _type);
-	~Component();
+	virtual ~Component();
 
 	Type type;
 };

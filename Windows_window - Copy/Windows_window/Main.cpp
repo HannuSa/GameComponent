@@ -90,9 +90,31 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	wglMakeCurrent(GetDC(windowHandle), hglrc);
 
 
+	//Game stuff
+	GameObject* object1 = new GameObject();
+	GameObject* object2 = new GameObject();
+	GameObject* object3 = new GameObject();
 
+	PhysicsComponent* phys= new PhysicsComponent(glm::vec2());
+	std::vector<unsigned char> ImageData;
+	unsigned int Width, Height;
+	unsigned error = lodepng::decode(ImageData, Width, Height, "Penta.png");
+	RenderComponent* render = new RenderComponent(ImageData, Width, Height);
+	object1->AddComponent(phys);
+	object1->AddComponent(render);
 
+	SystemManager manager;
+	manager.InitGraphics();
 
+	manager.AddObject(object1);
+	//manager.AddObject(object2);
+	//manager.AddObject(object3);
+	
+	for (;;)
+	{
+		manager.Update();
+		SwapBuffers(hdc);
+	}
 	//OpenGL context destroy
 	wglMakeCurrent(GetDC(windowHandle), NULL);
 	wglDeleteContext(hglrc);

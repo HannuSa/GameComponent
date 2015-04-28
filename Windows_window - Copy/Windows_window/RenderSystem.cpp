@@ -123,7 +123,7 @@ void RenderSystem::Initialize()
 
 	glUseProgram(programObject);
 
-	GLint uniform_mytexture;
+	uniform_mytexture;
 	uniform_mytexture = glGetUniformLocation(programObject, "mytexture");
 	glUniform1i(uniform_mytexture, 0);
 
@@ -189,9 +189,15 @@ void RenderSystem::Update(RenderComponent* _comp)
 		//attrib, amount of dimensional attributes, type of atttributes , normalized?, reference, pointer to data
 		glVertexAttribPointer(positionIndex, 2, GL_FLOAT, GL_FALSE, 0, reinterpret_cast<GLvoid*>(0));
 		glVertexAttribPointer(textureIndex, 2, GL_FLOAT, GL_FALSE, 0, reinterpret_cast<GLvoid*>(8));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[1]);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glActiveTexture(GL_TEXTURE0);
+		glBindSampler(0, uniform_mytexture);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		glUseProgram(0u);
 	}
 }

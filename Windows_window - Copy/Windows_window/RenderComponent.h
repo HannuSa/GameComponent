@@ -6,10 +6,10 @@ class RenderComponent :
 	public Component
 {
 public:
-	RenderComponent(std::vector<unsigned char> _image);
+	RenderComponent(std::vector<unsigned char> _image, unsigned int _width, unsigned int _height);
 	~RenderComponent();
 
 	std::vector<unsigned char> image;
-	unsigned width, height;
+	unsigned int width, height;
 };
 

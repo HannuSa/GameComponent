@@ -10,7 +10,7 @@ class GameObject
 public:
 	GameObject();
 	~GameObject();
-	void AddComponent(Component* _comp);
+	void AddComponent(Component* _component);
 
 	template<typename T>
 	T* GetComponent();
