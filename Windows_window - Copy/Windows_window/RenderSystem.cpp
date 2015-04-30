@@ -47,6 +47,46 @@ void RenderSystem::CheckShaderErrors(GLuint shader)
 
 void RenderSystem::Initialize()
 {
+	static const GLchar* VERTEX_SOURCE =
+		"attribute vec2 attrPosition;\n"
+		"attribute vec2 textCoord;\n"
+
+		"uniform mat4 unifProjection;\n"
+		"uniform mat4 unifView\n;"
+		"uniform mat4 unifWorld;\n"
+
+		"varying vec2 f_textCoord;\n"
+
+		"void main()\n"
+		"{\n"
+		"	gl_Position = unifProjection * unifView * unifWorld * vec4(attrPosition, 0.0, 1.0);\n"
+		"	f_textCoord = textCoord;\n"
+		"}"
+		;
+
+	static const GLchar* FRAGMENT_SOURCE =
+		"varying vec2 f_textCoord;\n"
+		"uniform sampler2D mytexture;\n"
+		"void main()\
+		{\
+			gl_FragColor = texture2D(mytexture, f_textCoord);\
+		}\
+		";
+
+	static const GLfloat VERTEX_DATA[] =
+	{
+		0.0f, 0.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, 1.0f, 1.0f, 1.0f
+	};
+
+	static const GLint INDEX_DATA[] =
+	{
+		0, 1, 2,
+		2, 1, 3
+	};
+
 	//OpenGl and shader stuff
 
 	GLenum err = glewInit();
@@ -123,10 +163,6 @@ void RenderSystem::Initialize()
 
 	glUseProgram(programObject);
 
-	uniform_mytexture;
-	uniform_mytexture = glGetUniformLocation(programObject, "mytexture");
-	glUniform1i(uniform_mytexture, 0);
-
 	//Projection
 
 	projectionIndex = glGetUniformLocation(programObject, "unifProjection");
@@ -142,7 +178,7 @@ void RenderSystem::Initialize()
 	viewIndex = glGetUniformLocation(programObject, "unifView");
 	assert(viewIndex != -1);
 
-	glm::mat4 viewTransform = glm::translate(glm::vec3(0.0f, 0.0f, -5.0f));
+	glm::mat4 viewTransform = glm::translate(glm::vec3(0.0f, 0.0f, -1.0f));
 	glUniformMatrix4fv(viewIndex, 1, GL_FALSE, reinterpret_cast<float*>(&viewTransform));
 
 	//World stuff
@@ -173,16 +209,19 @@ void RenderSystem::Update(RenderComponent* _comp)
 		GLenum glerr = glGetError();
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
+		uniform_mytexture = glGetUniformLocation(programObject, "mytexture");
+		glUniform1i(uniform_mytexture, 0);
+
 		glActiveTexture(GL_TEXTURE0);
 
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		//Draw
 		glUseProgram(programObject);
 
 		//World rotation happens here
 		rotation += 1.0f;
-		worldTransform = glm::mat4(); glm::translate(glm::vec3(0.0f, 0.0f, -5.0f)) ;
+		worldTransform = glm::mat4() * glm::translate(glm::vec3(0.0f, 0.0f, -1.0f)) ;
 		glUniformMatrix4fv(worldIndex, 1, GL_FALSE, reinterpret_cast<float*>(&worldTransform));
 
 		glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
@@ -192,11 +231,8 @@ void RenderSystem::Update(RenderComponent* _comp)
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[1]);
-		glBindTexture(GL_TEXTURE_2D, texture);
-		glActiveTexture(GL_TEXTURE0);
-		glBindSampler(0, uniform_mytexture);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-		glBindTexture(GL_TEXTURE_2D, 0);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, reinterpret_cast<GLvoid*>(0));
+		//glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		glUseProgram(0u);
 	}
