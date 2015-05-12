@@ -3,6 +3,7 @@
 
 SystemManager::SystemManager()
 {
+	VertexData = NULL;
 }
 
 
@@ -29,7 +30,7 @@ void SystemManager::Update()
 {
 	for (unsigned int i = 0; i < objects.size(); i++)
 	{
-		physics.Update(objects[i]->GetComponent<PhysicsComponent>());
+		physics.Update(objects[i]->GetComponent<PhysicsComponent>(),render.getVertexData());
 		render.Update(objects[i]->GetComponent<RenderComponent>());
 	}
 }

@@ -20,5 +20,6 @@ private:
 	PhysicsSystem physics;
 	RenderSystem render;
 	std::vector<GameObject*> objects;
+	GLfloat* VertexData;
 };
 

@@ -96,19 +96,35 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	GameObject* object3 = new GameObject();
 
 	PhysicsComponent* phys= new PhysicsComponent(glm::vec2());
+	PhysicsComponent* phys2 = new PhysicsComponent(glm::vec2(200,200));
+	PhysicsComponent* phys3 = new PhysicsComponent(glm::vec2(500, 500));
+
 	std::vector<unsigned char> ImageData;
 	unsigned int Width, Height;
 	unsigned error = lodepng::decode(ImageData, Width, Height, "Test.png");
 	RenderComponent* render = new RenderComponent(ImageData, Width, Height);
+
+	error = lodepng::decode(ImageData, Width, Height, "Eye.png");
+	RenderComponent* render2 = new RenderComponent(ImageData, Width, Height);
+
+	error = lodepng::decode(ImageData, Width, Height, "Eye.png");
+	RenderComponent* render3 = new RenderComponent(ImageData, Width, Height);
+
 	object1->AddComponent(phys);
 	object1->AddComponent(render);
+
+	object2->AddComponent(phys2);
+	object2->AddComponent(render2);
+
+	object3->AddComponent(phys3);
+	object3->AddComponent(render3);
 
 	SystemManager manager;
 	manager.InitGraphics();
 
 	manager.AddObject(object1);
-	//manager.AddObject(object2);
-	//manager.AddObject(object3);
+	manager.AddObject(object2);
+	manager.AddObject(object3);
 	
 	for (;;)
 	{

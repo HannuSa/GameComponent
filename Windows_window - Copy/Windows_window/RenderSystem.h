@@ -14,7 +14,7 @@ public:
 	void ErrorMessage(std::string error);
 	void CheckShaderErrors(GLuint shader);
 	void Update(RenderComponent* _component);
-
+	GLfloat* getVertexData();
 private:
 	GLuint programObject;
 	GLuint buffers[2];
@@ -24,4 +24,5 @@ private:
 	GLint uniform_mytexture;
 	float rotation;
 	glm::mat4 worldTransform;
+	GLfloat VERTEX_DATA[16];
 };
