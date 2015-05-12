@@ -102,13 +102,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	std::vector<unsigned char> ImageData;
 	unsigned int Width, Height;
 	unsigned error = lodepng::decode(ImageData, Width, Height, "Test.png");
-	RenderComponent* render = new RenderComponent(ImageData, Width, Height);
+	RenderComponent* render = new RenderComponent(ImageData, Width, Height,1);
 
 	error = lodepng::decode(ImageData, Width, Height, "Eye.png");
-	RenderComponent* render2 = new RenderComponent(ImageData, Width, Height);
+	RenderComponent* render2 = new RenderComponent(ImageData, Width, Height,2);
 
 	error = lodepng::decode(ImageData, Width, Height, "Eye.png");
-	RenderComponent* render3 = new RenderComponent(ImageData, Width, Height);
+	RenderComponent* render3 = new RenderComponent(ImageData, Width, Height,3);
 
 	object1->AddComponent(phys);
 	object1->AddComponent(render);
@@ -126,6 +126,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	manager.AddObject(object2);
 	manager.AddObject(object3);
 	
+	bool test = false;
 	for (;;)
 	{
 		MSG msg;
@@ -138,9 +139,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		manager.Update();
 		SwapBuffers(hdc);
+		if (test == false)
+		{
+			manager.objects[0]->RemoveComponent(phys);
+			test = true;
+		}
+		else
+		{
+			manager.objects[0]->AddComponent(phys);
+			test = false;
+		}
 	}
 	//OpenGL context destroy
 	wglMakeCurrent(GetDC(windowHandle), NULL);

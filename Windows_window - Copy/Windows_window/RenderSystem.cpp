@@ -159,15 +159,23 @@ void RenderSystem::Initialize()
 
 	//Create vertex and index buffers
 
-	glGenBuffers(2, buffers);
+	glGenBuffers(4, buffers);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[0]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(INDEX_DATA), INDEX_DATA, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0u);
 
-	glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
+	glBindBuffer(GL_ARRAY_BUFFER, buffers[1]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(VERTEX_DATA), VERTEX_DATA, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0u);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[1]);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(INDEX_DATA), INDEX_DATA, GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0u);
+	glBindBuffer(GL_ARRAY_BUFFER, buffers[2]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(VERTEX_DATA), VERTEX_DATA, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0u);
+
+
+	glBindBuffer(GL_ARRAY_BUFFER, buffers[3]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(VERTEX_DATA), VERTEX_DATA, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0u);
 
 
 	//Setting uniforms
@@ -179,7 +187,6 @@ void RenderSystem::Initialize()
 	projectionIndex = glGetUniformLocation(programObject, "unifProjection");
 	assert(projectionIndex != -1);
 
-	//FOV, aspect ratio, Near draw, Far draw
 	glm::mat4 projectionTransform = glm::ortho(0.0f, 800.0f, 600.0f, 0.0f);
 	glUniformMatrix4fv(projectionIndex, 1, GL_FALSE, glm::value_ptr(projectionTransform));
 
@@ -189,10 +196,11 @@ void RenderSystem::Initialize()
 
 void RenderSystem::Update(RenderComponent* _comp)
 {
+	
 	if (_comp != nullptr)
 	{
 		glClearColor(0, 1, 0, 0);
-		glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
+		glBindBuffer(GL_ARRAY_BUFFER, buffers[_comp->buffer]);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(VERTEX_DATA), VERTEX_DATA, GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0u);
 		glUseProgram(programObject);
@@ -211,17 +219,15 @@ void RenderSystem::Update(RenderComponent* _comp)
 
 		glActiveTexture(GL_TEXTURE0);
 
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 		//Draw
-		glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
+		glBindBuffer(GL_ARRAY_BUFFER, buffers[_comp->buffer]);
 		//attrib, amount of dimensional attributes, type of atttributes , normalized?, reference, pointer to data
 		glVertexAttribPointer(positionIndex, 2, GL_FLOAT, GL_FALSE, 16, reinterpret_cast<GLvoid*>(0));
 		glVertexAttribPointer(textureIndex, 2, GL_FLOAT, GL_FALSE, 16, reinterpret_cast<GLvoid*>(8));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		glBindTexture(GL_TEXTURE_2D, texture);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[1]);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[0]);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, reinterpret_cast<GLvoid*>(0));
 		//glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);

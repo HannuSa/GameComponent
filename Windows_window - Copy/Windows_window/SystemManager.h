@@ -15,11 +15,11 @@ public:
 	void AddObject(GameObject* _object);
 	void InitGraphics();
 	void Update();
+	std::vector<GameObject*> objects;
 
 private:
 	PhysicsSystem physics;
 	RenderSystem render;
-	std::vector<GameObject*> objects;
 	GLfloat* VertexData;
 };
 

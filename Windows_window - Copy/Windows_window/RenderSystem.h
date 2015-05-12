@@ -17,7 +17,7 @@ public:
 	GLfloat* getVertexData();
 private:
 	GLuint programObject;
-	GLuint buffers[2];
+	GLuint buffers[4];
 	GLint positionIndex, textureIndex;
 	GLint projectionIndex, viewIndex, worldIndex;
 	GLuint texture;
