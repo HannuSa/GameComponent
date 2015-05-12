@@ -75,10 +75,18 @@ void RenderSystem::Initialize()
 
 	static const GLfloat VERTEX_DATA[] =
 	{
-		0.0f, 0.0f, 0.0f, 0.0f,
-		1.0f, 0.0f, 1.0f, 0.0f,
-		0.0f, 1.0f, 0.0f, 1.0f,
-		1.0f, 1.0f, 1.0f, 1.0f
+		//1st vertex
+		0.0f, 0.0f,
+		0.0f, 0.0f,
+		//2nd vertex
+		1.0f, 0.0f, 
+		1.0f, 0.0f,
+		//3th vertex
+		0.0f, 1.0f, 
+		0.0f, 1.0f,
+		//4th vertex
+		1.0f, 1.0f, 
+		1.0f, 1.0f
 	};
 
 	static const GLint INDEX_DATA[] =
@@ -200,16 +208,15 @@ void RenderSystem::Update(RenderComponent* _comp)
 		glClearColor(0, 1, 0, 0);
 
 		//Create texture
-		texture;
 		glGenTextures(1, &texture);
 
 		glBindTexture(GL_TEXTURE_2D, texture);
-
-		glTexImage2D(GL_TEXTURE_2D, 0, 4, _comp->width, _comp->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, _comp->image.data());
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, _comp->width, _comp->height, 0, GL_RGB, GL_UNSIGNED_BYTE, _comp->image.data());
 		GLenum glerr = glGetError();
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
+		glBindTexture(GL_TEXTURE_2D, 0);
 		uniform_mytexture = glGetUniformLocation(programObject, "mytexture");
+
 		glUniform1i(uniform_mytexture, 0);
 
 		glActiveTexture(GL_TEXTURE0);
@@ -221,19 +228,21 @@ void RenderSystem::Update(RenderComponent* _comp)
 
 		//World rotation happens here
 		rotation += 1.0f;
-		worldTransform = glm::mat4() * glm::translate(glm::vec3(0.0f, 0.0f, -1.0f)) ;
+		worldTransform = glm::mat4() * glm::translate(glm::vec3(-1.0f, 0.0f, 0.0f))*rotation ;
 		glUniformMatrix4fv(worldIndex, 1, GL_FALSE, reinterpret_cast<float*>(&worldTransform));
 
 		glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
 		//attrib, amount of dimensional attributes, type of atttributes , normalized?, reference, pointer to data
 		glVertexAttribPointer(positionIndex, 2, GL_FLOAT, GL_FALSE, 0, reinterpret_cast<GLvoid*>(0));
-		glVertexAttribPointer(textureIndex, 2, GL_FLOAT, GL_FALSE, 0, reinterpret_cast<GLvoid*>(8));
+		glVertexAttribPointer(textureIndex, 2, GL_FLOAT, GL_FALSE, 4, reinterpret_cast<GLvoid*>(8));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+		glBindTexture(GL_TEXTURE_2D, texture);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[1]);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, reinterpret_cast<GLvoid*>(0));
 		//glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glBindTexture(GL_TEXTURE_2D, 0);
 		glUseProgram(0u);
 	}
 }

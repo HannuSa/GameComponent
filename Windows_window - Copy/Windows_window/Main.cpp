@@ -98,7 +98,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	PhysicsComponent* phys= new PhysicsComponent(glm::vec2());
 	std::vector<unsigned char> ImageData;
 	unsigned int Width, Height;
-	unsigned error = lodepng::decode(ImageData, Width, Height, "Penta.png");
+	unsigned error = lodepng::decode(ImageData, Width, Height, "Test.png");
 	RenderComponent* render = new RenderComponent(ImageData, Width, Height);
 	object1->AddComponent(phys);
 	object1->AddComponent(render);
