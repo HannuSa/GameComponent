@@ -90,7 +90,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	wglMakeCurrent(GetDC(windowHandle), hglrc);
 
 
-	//Game stuff
+	//Game object creation
 	GameObject* object1 = new GameObject();
 	GameObject* object2 = new GameObject();
 	GameObject* object3 = new GameObject();
@@ -119,6 +119,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	object3->AddComponent(phys3);
 	object3->AddComponent(render3);
 
+	//Manager initialization
 	SystemManager manager;
 	manager.InitGraphics();
 
@@ -142,6 +143,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		manager.Update();
 		SwapBuffers(hdc);
+		//Removing and adding components
 		if (test == false)
 		{
 			manager.objects[0]->RemoveComponent(phys);

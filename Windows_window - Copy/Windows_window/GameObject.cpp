@@ -15,7 +15,7 @@ void GameObject::AddComponent(Component* _component)
 
 void GameObject::RemoveComponent(Component* _comp)
 {
-	ComponentMap::iterator position =_components.find(&typeid(_comp));
+	ComponentMap::iterator position =_components.find(&typeid(*_comp));
 	if (position != _components.end())
 	{
 		_components.erase(position);
