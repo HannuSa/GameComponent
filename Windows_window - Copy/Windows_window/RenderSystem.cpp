@@ -160,23 +160,13 @@ void RenderSystem::Initialize()
 	//Create vertex and index buffers
 
 	glGenBuffers(4, buffers);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[0]);
+	glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(VERTEX_DATA), VERTEX_DATA, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0u);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[1]);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(INDEX_DATA), INDEX_DATA, GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0u);
-
-	glBindBuffer(GL_ARRAY_BUFFER, buffers[1]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(VERTEX_DATA), VERTEX_DATA, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0u);
-
-	glBindBuffer(GL_ARRAY_BUFFER, buffers[2]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(VERTEX_DATA), VERTEX_DATA, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0u);
-
-
-	glBindBuffer(GL_ARRAY_BUFFER, buffers[3]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(VERTEX_DATA), VERTEX_DATA, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0u);
-
 
 	//Setting uniforms
 
@@ -200,7 +190,7 @@ void RenderSystem::Update(RenderComponent* _comp)
 	if (_comp != nullptr)
 	{
 		glClearColor(0, 1, 0, 0);
-		glBindBuffer(GL_ARRAY_BUFFER, buffers[_comp->buffer]);
+		glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(VERTEX_DATA), VERTEX_DATA, GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0u);
 		glUseProgram(programObject);
@@ -220,14 +210,14 @@ void RenderSystem::Update(RenderComponent* _comp)
 		glActiveTexture(GL_TEXTURE0);
 
 		//Draw
-		glBindBuffer(GL_ARRAY_BUFFER, buffers[_comp->buffer]);
+		glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
 		//attrib, amount of dimensional attributes, type of atttributes , normalized?, reference, pointer to data
 		glVertexAttribPointer(positionIndex, 2, GL_FLOAT, GL_FALSE, 16, reinterpret_cast<GLvoid*>(0));
 		glVertexAttribPointer(textureIndex, 2, GL_FLOAT, GL_FALSE, 16, reinterpret_cast<GLvoid*>(8));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		glBindTexture(GL_TEXTURE_2D, texture);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[0]);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[1]);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, reinterpret_cast<GLvoid*>(0));
 		//glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
